@@ -389,7 +389,7 @@
     const marqueeContainer = document.getElementById("marquee-container");
     if (marqueeContainer) {
       const trackHTML = `
-        <div class="flex flex-shrink-0 items-center justify-around w-max min-w-full gap-16 pr-16 lg:gap-24 lg:pr-24">
+        <div class="flex flex-shrink-0 items-center justify-start w-max gap-16 pr-16">
           ${clientLogos.map(logo => `<img src="${logo.src}" alt="${logo.alt}" class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain ${logo.extraClass}">`).join('')}
         </div>
       `;
