@@ -346,6 +346,14 @@
 
   <!-- Scripts -->
   <script>
+    // --- Scroll Restoration Fix ---
+    // Desativa a restauração automática de scroll do navegador
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    // Força a página de volta para o topo imediatamente
+    window.scrollTo(0, 0);
+
     // Initialize Lucide Icons
     lucide.createIcons();
 
