@@ -119,45 +119,8 @@
         class="absolute w-32 h-full right-0 bg-gradient-to-l from-neutral-950 to-transparent z-10 pointer-events-none">
       </div>
 
-      <div class="flex whitespace-nowrap animate-marquee items-center w-max">
-        <!-- Group 1 -->
-        <div class="flex flex-shrink-0 items-center justify-around gap-16 lg:gap-24 px-8 lg:px-12">
-          <img src="logo-cliente1.svg" alt="cliente1"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain grayscale opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <img src="logo-cliente2.svg" alt="cliente2"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain grayscale opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <img src="logo-cliente3.svg" alt="cliente3"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain grayscale opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <img src="logo-cliente4.svg" alt="cliente4"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain grayscale opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <img src="logo-cliente5.svg" alt="cliente5"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain grayscale opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <img src="logo-cliente6.svg" alt="cliente6"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain brightness-0 invert opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <img src="logo-cliente1.svg" alt="cliente7"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain grayscale opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <img src="logo-cliente2.svg" alt="cliente8"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain grayscale opacity-50 hover:opacity-100 transition-opacity duration-300">
-        </div>
-        <!-- Group 2 (Duplicate for Seamless Loop) -->
-        <div class="flex flex-shrink-0 items-center justify-around gap-16 lg:gap-24 px-8 lg:px-12">
-          <img src="logo-cliente1.svg" alt="cliente1"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain grayscale opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <img src="logo-cliente2.svg" alt="cliente2"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain grayscale opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <img src="logo-cliente3.svg" alt="cliente3"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain grayscale opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <img src="logo-cliente4.svg" alt="cliente4"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain grayscale opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <img src="logo-cliente5.svg" alt="cliente5"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain grayscale opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <img src="logo-cliente6.svg" alt="cliente6"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain brightness-0 invert opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <img src="logo-cliente1.svg" alt="cliente7"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain grayscale opacity-50 hover:opacity-100 transition-opacity duration-300">
-          <img src="logo-cliente2.svg" alt="cliente8"
-            class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain grayscale opacity-50 hover:opacity-100 transition-opacity duration-300">
-        </div>
+      <div id="marquee-container" class="flex animate-marquee w-max">
+        <!-- Logos injected by JS (Double Flex Container approach) -->
       </div>
     </div>
   </section>
@@ -409,6 +372,29 @@
         if (reveals[0]) reveals[0].classList.add("active");
       }, 100);
     });
+
+    // --- Marquee Logos (Double Flex Container approach) ---
+    const clientLogos = [
+      { src: "logo-cliente1.svg", alt: "cliente1", extraClass: "grayscale opacity-50 hover:opacity-100 transition-opacity duration-300" },
+      { src: "logo-cliente2.svg", alt: "cliente2", extraClass: "grayscale opacity-50 hover:opacity-100 transition-opacity duration-300" },
+      { src: "logo-cliente3.svg", alt: "cliente3", extraClass: "grayscale opacity-50 hover:opacity-100 transition-opacity duration-300" },
+      { src: "logo-cliente4.svg", alt: "cliente4", extraClass: "grayscale opacity-50 hover:opacity-100 transition-opacity duration-300" },
+      { src: "logo-cliente5.svg", alt: "cliente5", extraClass: "grayscale opacity-50 hover:opacity-100 transition-opacity duration-300" },
+      { src: "logo-cliente6.svg", alt: "cliente6", extraClass: "brightness-0 invert opacity-50 hover:opacity-100 transition-opacity duration-300" },
+      { src: "logo-cliente1.svg", alt: "cliente7", extraClass: "grayscale opacity-50 hover:opacity-100 transition-opacity duration-300" },
+      { src: "logo-cliente2.svg", alt: "cliente8", extraClass: "grayscale opacity-50 hover:opacity-100 transition-opacity duration-300" },
+      { src: "logo-cliente7.svg", alt: "cliente9", extraClass: "grayscale opacity-50 hover:opacity-100 transition-opacity duration-300" }
+    ];
+
+    const marqueeContainer = document.getElementById("marquee-container");
+    if (marqueeContainer) {
+      const trackHTML = `
+        <div class="flex flex-shrink-0 items-center justify-around w-max min-w-full gap-16 pr-16 lg:gap-24 lg:pr-24">
+          ${clientLogos.map(logo => `<img src="${logo.src}" alt="${logo.alt}" class="flex-shrink-0 h-10 lg:h-10 w-auto object-contain ${logo.extraClass}">`).join('')}
+        </div>
+      `;
+      marqueeContainer.innerHTML = trackHTML + trackHTML;
+    }
 
     // --- Grid & Modal Data ---
     const designProjects = [
