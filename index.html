@@ -280,62 +280,33 @@
   <div id="project-modal" onclick="closeModal(event)"
     class="fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
     <div id="project-modal-box"
-      class="bg-neutral-900 rounded-3xl w-full max-w-6xl max-h-[90vh] mx-4 flex flex-col lg:flex-row shadow-2xl overflow-hidden scale-95 transition-transform duration-300 relative border border-white/5">
+      class="bg-neutral-900 rounded-3xl w-full max-w-6xl h-[90vh] mx-4 flex flex-col lg:flex-row shadow-2xl overflow-hidden scale-95 transition-transform duration-300 relative border border-white/5">
       <!-- Close Button -->
       <button onclick="forceCloseModal()"
         class="absolute top-4 right-4 lg:top-6 lg:right-6 z-50 w-12 h-12 bg-black/50 backdrop-blur-md text-white rounded-full flex items-center justify-center hover:bg-black transition border border-white/10">
         <i data-lucide="x" class="w-6 h-6"></i>
       </button>
 
-      <!-- Carousel Left Column -->
-      <div
-        class="w-full lg:w-[60%] h-auto relative bg-neutral-900 group/modal flex flex-col justify-center items-center">
-        <div id="modal-carousel-inner"
-          class="flex flex-col justify-center items-center w-full h-auto relative overflow-hidden">
+      <!-- Vertical Scroll Gallery - Left Column -->
+      <div class="w-full lg:w-[60%] h-full overflow-y-auto no-scrollbar bg-neutral-900">
+        <div id="modal-gallery-inner" class="flex flex-col gap-8 p-6">
           <!-- Images injected here -->
-        </div>
-        <button onclick="navModalCarousel(-1)"
-          class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-black/60 backdrop-blur-md text-white rounded-full flex items-center justify-center hover:bg-neutral-800 transition lg:opacity-0 lg:group-hover/modal:opacity-100 border border-white/10">
-          <i data-lucide="chevron-left" class="w-6 h-6"></i>
-        </button>
-        <button onclick="navModalCarousel(1)"
-          class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-black/60 backdrop-blur-md text-white rounded-full flex items-center justify-center hover:bg-neutral-800 transition lg:opacity-0 lg:group-hover/modal:opacity-100 border border-white/10">
-          <i data-lucide="chevron-right" class="w-6 h-6"></i>
-        </button>
-        <!-- Slides indicator -->
-        <div
-          class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 bg-black/60 backdrop-blur-md text-white text-xs px-4 py-2 rounded-full tracking-widest border border-white/10">
-          <span id="slide-counter">1 / 6</span>
         </div>
       </div>
 
-      <!-- Content Right Column -->
-      <div data-lenis-prevent
-        class="w-full lg:w-[40%] p-8 lg:p-12 overflow-y-auto flex flex-col justify-center gap-8 custom-scrollbar pb-24 lg:pb-12">
-        <div id="modal-tags" class="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-widest text-neutral-400">
-          <!-- Tags injected here -->
+      <!-- Sticky Text - Right Column -->
+      <div class="w-full lg:w-[40%] p-8 lg:p-12 flex flex-col">
+        <div class="sticky top-8">
+          <h2 id="modal-title" class="text-3xl lg:text-4xl font-bold text-white leading-[1.1] tracking-tight mb-8"></h2>
+          <div class="w-12 h-1 bg-white/20 rounded-full mb-8"></div>
+          <p id="modal-desc" class="text-neutral-300 text-lg font-light leading-relaxed"></p>
         </div>
-        <h2 id="modal-title" class="text-3xl lg:text-4xl font-bold text-white leading-[1.1] tracking-tight"></h2>
-        <div class="w-12 h-1 bg-white/20 rounded-full flex-shrink-0"></div>
-        <p id="modal-desc" class="text-neutral-300 text-lg font-light leading-relaxed"></p>
       </div>
     </div>
   </div>
 
-  <style>
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
-    }
 
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: transparent;
-    }
 
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #333;
-      border-radius: 10px;
-    }
-  </style>
 
   <!-- Floating WhatsApp Button -->
   <a href="https://wa.me/5531992064471?text=Ol%C3%A1%2C%20Est%C3%BAdio%20DKM!%20Gostaria%20de%20conversar%20sobre%20um%20projeto."
@@ -538,27 +509,28 @@
     });
 
     // Modal Logic
-    let currentModalSlides = [];
-    let currentSlideIndex = 0;
-
     function openModal(index) {
       const proj = designProjects[index];
-      currentModalSlides = proj.galleryImages && proj.galleryImages.length > 0 ? proj.galleryImages : [proj.coverImage || "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80&w=1200"];
-      currentSlideIndex = 0;
+      const images = proj.galleryImages && proj.galleryImages.length > 0
+        ? proj.galleryImages
+        : [proj.coverImage || "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80&w=1200"];
 
-      // Populate Data
+      // Populate text
       document.getElementById('modal-title').innerText = proj.title;
       document.getElementById('modal-desc').innerText = proj.description || '';
 
-      const tagsHtml = proj.tags ? proj.tags.map(tag => `<span class="bg-neutral-800/80 px-4 py-1.5 rounded-full border border-white/5">${tag}</span>`).join('') : '';
-      document.getElementById('modal-tags').innerHTML = tagsHtml;
+      // Render all images stacked vertically
+      const gallery = document.getElementById('modal-gallery-inner');
+      gallery.innerHTML = images.map(src =>
+        `<img src="${src}" class="w-full h-auto object-cover rounded-xl" loading="lazy" />`
+      ).join('');
 
-      renderModalCarousel();
+      // Reset gallery scroll to top
+      gallery.parentElement.scrollTop = 0;
 
-      // Show Modal Backdrop
+      // Show Modal
       const modal = document.getElementById("project-modal");
       const box = document.getElementById("project-modal-box");
-
       modal.classList.remove("opacity-0", "pointer-events-none");
       box.classList.remove("scale-95");
       document.body.style.overflow = "hidden";
@@ -567,7 +539,6 @@
     function forceCloseModal() {
       const modal = document.getElementById("project-modal");
       const box = document.getElementById("project-modal-box");
-
       modal.classList.add("opacity-0", "pointer-events-none");
       box.classList.add("scale-95");
       document.body.style.overflow = "";
@@ -577,19 +548,6 @@
       if (e.target.id === "project-modal") {
         forceCloseModal();
       }
-    }
-
-    function navModalCarousel(dir) {
-      currentSlideIndex += dir;
-      if (currentSlideIndex < 0) currentSlideIndex = currentModalSlides.length - 1;
-      if (currentSlideIndex >= currentModalSlides.length) currentSlideIndex = 0;
-      renderModalCarousel();
-    }
-
-    function renderModalCarousel() {
-      const inner = document.getElementById('modal-carousel-inner');
-      inner.innerHTML = `<img src="${currentModalSlides[currentSlideIndex]}" class="w-full h-auto object-contain transition-opacity duration-300 animate-[fadeIn_0.5s_ease-out]" />`;
-      document.getElementById('slide-counter').innerText = `${currentSlideIndex + 1} / ${currentModalSlides.length}`;
     }
 
     // Initialize Lenis Smooth Scroll
